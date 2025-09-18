@@ -1,4 +1,4 @@
-/* --- Estilos base --- */
+
 body {
     margin: 0;
     padding: 0;
@@ -39,6 +39,86 @@ nav a:hover {
     color: #ffd700;
 }
 
+main, .historia-container, .contacto-container, .sobre-container {
+    max-width: 800px;
+    margin: 20px auto;
+    padding: 20px;
+    background: #fff;
+    border-radius: 16px;
+    box-shadow: 0 4px 16px rgba(0,0,0,0.1);
+    text-align: left;
+    line-height: 1.6;
+}
+
+
+main h1, main h2, .historia-container h2, .contacto-container h2 {
+    color: #ff9800;
+    text-align: center;
+    margin-bottom: 15px;
+}
+
+main p, .historia-container p, .contacto-container p {
+    font-size: 1.1em;
+    margin-bottom: 15px;
+}
+
+
+.contacto-container form {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+.contacto-container input,
+.contacto-container textarea {
+    padding: 12px;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    font-size: 1em;
+    width: 100%;
+}
+
+.contacto-container button {
+    padding: 12px;
+    background: #ff9800;
+    color: white;
+    border: none;
+    border-radius: 8px;
+    font-size: 1.1em;
+    cursor: pointer;
+    transition: background 0.2s;
+}
+
+.contacto-container button:hover {
+    background: #fb8c00;
+}
+
+@media (max-width: 768px) {
+    main, .historia-container, .contacto-container, .sobre-container {
+        width: 90%;
+        padding: 15px;
+    }
+
+    main h1, main h2 {
+        font-size: 1.6em;
+    }
+
+    main p, .historia-container p, .contacto-container p {
+        font-size: 1em;
+    }
+}
+
+@media (max-width: 480px) {
+    main h1, main h2 {
+        font-size: 1.4em;
+    }
+
+    main p, .historia-container p, .contacto-container p {
+        font-size: 0.95em;
+    }
+}
+
+
 #pixelito {
     display: block;
     margin: 20px auto;
@@ -62,7 +142,6 @@ nav a:hover {
     font-size: 14px;
 }
 
-/* Barras de progreso */
 progress {
     width: 100%;
     height: 20px;
@@ -84,7 +163,7 @@ progress::-moz-progress-bar {
     border-radius: 10px;
 }
 
-/* Colores personalizados */
+
 #hambreBar::-webkit-progress-value { background: linear-gradient(to right, #ff4e50, #f9d423); }
 #hambreBar::-moz-progress-bar { background: linear-gradient(to right, #ff4e50, #f9d423); }
 
@@ -136,7 +215,7 @@ footer {
 }
 
 
-/* --- Media queries para móviles --- */
+
 @media (max-width: 768px) {
     #cabeceralogo {
         font-size: 2em;

@@ -23,7 +23,7 @@ const saludText = document.getElementById("saludText");
 // Funciones de interacción
 function alimentar() {
     if (!vivo) return;
-    hambre = Math.min(hambre + 25, 100);
+    hambre = Math.min(hambre + 25, 100);//Hambre aumenta al comer
     salud = Math.min(salud + 5, 100); // Comer mejora salud
     actualizarEstado();
 }
@@ -85,7 +85,7 @@ function actualizarEstado() {
 // Función cuando Pixelito muere
 function morir() {
     vivo = false;
-    pixelito.src = "Imagenes/pixelito muerto.png";
+    pixelito.src = "Imagenes/Pixelito Muerto.png";
     pixelito.alt = "Pixelito ha muerto 💀";
 
     // Desactivar todos los botones
