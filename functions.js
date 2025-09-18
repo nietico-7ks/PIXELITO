@@ -5,6 +5,7 @@ let carino = 100;
 let salud = 100;
 let vivo = true;
 
+// Elemento Pixelito
 const pixelito = document.getElementById("pixelito");
 
 // Barras de progreso
@@ -19,129 +20,90 @@ const diversionText = document.getElementById("diversionText");
 const carinoText = document.getElementById("carinoText");
 const saludText = document.getElementById("saludText");
 
-// Botones
-const botones = document.querySelectorAll("button");
-
-//FUNCIONES DE INTERACCIÓN
+// Funciones de interacción
 function alimentar() {
-  if (!vivo) return;
-  hambre = Math.min(hambre + 25, 100);
-  salud = Math.min(salud + 5, 100); // comer ayuda a la salud
-  actualizarEstado();
+    if (!vivo) return;
+    hambre = Math.min(hambre + 25, 100);
+    salud = Math.min(salud + 5, 100); // Comer mejora salud
+    actualizarEstado();
 }
 
 function jugar() {
-  if (!vivo) return;
-  diversion = Math.min(diversion + 25, 100);
-  hambre = Math.max(hambre - 10, 0); // jugar da hambre
-  salud = Math.max(salud - 5, 0); // jugar mucho puede cansar
-  actualizarEstado();
+    if (!vivo) return;
+    diversion = Math.min(diversion + 25, 100);
+    hambre = Math.max(hambre - 10, 0); // Jugar da hambre
+    salud = Math.max(salud - 5, 0);    // Cansa un poco
+    actualizarEstado();
 }
 
 function acariciar() {
-  if (!vivo) return;
-  carino = Math.min(carino + 20, 100);
-  actualizarEstado();
+    if (!vivo) return;
+    carino = Math.min(carino + 20, 100);
+    actualizarEstado();
 }
-const form = document.getElementById("pixelitoForm");
-const formRespuesta = document.getElementById("formRespuesta");
 
-form.addEventListener("submit", function(e) {
-    e.preventDefault(); // evitar recargar
-    const nombre = document.getElementById("nombre").value;
-    const mensaje = document.getElementById("mensaje").value;
-
-    formRespuesta.textContent = `¡Gracias ${nombre}! Pixelito recibió tu mensaje: "${mensaje}"`;
-
-    form.reset(); // limpiar formulario
-});
-
-const contactForm = document.getElementById("contactForm");
-const contactRespuesta = document.getElementById("contactRespuesta");
-
-contactForm.addEventListener("submit", function(e) {
-    e.preventDefault(); // evitar recargar la página
-
-    const nombre = document.getElementById("contactNombre").value;
-    const email = document.getElementById("contactEmail").value;
-    const mensaje = document.getElementById("contactMensaje").value;
-
-    contactRespuesta.textContent = `¡Gracias ${nombre}! Hemos recibido tu mensaje y te responderemos a ${email}.`;
-
-    contactForm.reset(); // limpiar el formulario
-});
-
-
-// --- FUNCIÓN PARA ACTUALIZAR EL ESTADO ---
+// Función que actualiza barras y estado de Pixelito
 function actualizarEstado() {
-  // Actualizar barras
-  hambreBar.value = hambre;
-  diversionBar.value = diversion;
-  carinoBar.value = carino;
-  saludBar.value = salud;
+    hambreBar.value = hambre;
+    diversionBar.value = diversion;
+    carinoBar.value = carino;
+    saludBar.value = salud;
 
-  // Actualizar porcentajes
-  hambreText.textContent = hambre + "%";
-  diversionText.textContent = diversion + "%";
-  carinoText.textContent = carino + "%";
-  saludText.textContent = salud + "%";
+    hambreText.textContent = hambre + "%";
+    diversionText.textContent = diversion + "%";
+    carinoText.textContent = carino + "%";
+    saludText.textContent = salud + "%";
 
-  // Revisar si está muerto
-  if (salud <= 0 || (hambre <= 0 && diversion <= 0 && carino <= 0)) {
-    morir();
-    return;
-  }
+    if (!vivo) return;
 
-  // --- ORDEN CORREGIDO DE ESTADOS ---
-  if (salud <= 30) {
-    pixelito.src = "Imagenes/Pixelito Enfermo.png";
-    pixelito.alt = "Pixelito está enfermo 🤒";
-    console.log("Pixelito está enfermo 🤒");
-  } else if (hambre <= 30 && diversion <= 30) {
-    pixelito.src = "Imagenes/Pixelito enojado.png";
-    pixelito.alt = "Pixelito está enojado 😠";
-    console.log("Pixelito está enojado 😠");
-  } else if (carino <= 30) {
-    pixelito.src = "Imagenes/Pixelito t roste.png";
-    pixelito.alt = "Pixelito está triste 💔";
-    console.log("Pixelito está triste 💔");
-  } else if (hambre <= 30) {
-    pixelito.src = "Imagenes/Pixelito Hambiento.png";
-    pixelito.alt = "Pixelito tiene hambre 🍽️";
-    console.log("Pixelito tiene hambre 🍽️");
-  } else if (diversion <= 30) {
-    pixelito.src = "Imagenes/Pixelito Aburrido.png";
-    pixelito.alt = "Pixelito está aburrido 😒";
-    console.log("Pixelito está aburrido 😒");
-  } else {
-    pixelito.src = "Imagenes/pixelito feliz.png";
-    pixelito.alt = "Pixelito está feliz 😄";
-    console.log("Pixelito está feliz 😄");
-  }
+    if (salud <= 0 || (hambre <= 0 && diversion <= 0 && carino <= 0)) {
+        morir();
+        return;
+    }
+
+    if (salud <= 30) {
+        pixelito.src = "Imagenes/Pixelito Enfermo.png";
+        pixelito.alt = "Pixelito está enfermo 🤒";
+    } else if (hambre <= 30 && diversion <= 30) {
+        pixelito.src = "Imagenes/Pixelito enojado.png";
+        pixelito.alt = "Pixelito está enojado 😠";
+    } else if (carino <= 30) {
+        pixelito.src = "Imagenes/Pixelito triste.png";
+        pixelito.alt = "Pixelito está triste 💔";
+    } else if (hambre <= 30) {
+        pixelito.src = "Imagenes/Pixelito Hambiento.png";
+        pixelito.alt = "Pixelito tiene hambre 🍽️";
+    } else if (diversion <= 30) {
+        pixelito.src = "Imagenes/Pixelito Aburrido.png";
+        pixelito.alt = "Pixelito está aburrido 😒";
+    } else {
+        pixelito.src = "Imagenes/pixelito feliz.png";
+        pixelito.alt = "Pixelito está feliz 😄";
+    }
 }
 
-// --- FUNCIÓN DE MUERTE ---
+// Función cuando Pixelito muere
 function morir() {
-  vivo = false;
-  pixelito.src = "Imagenes/pixelito muerto.png";
-  pixelito.alt = "Pixelito ha muerto 💀";
-  console.log("💀 Pixelito ha muerto 💀");
+    vivo = false;
+    pixelito.src = "Imagenes/pixelito muerto.png";
+    pixelito.alt = "Pixelito ha muerto 💀";
 
-  // Desactivar botones
-  botones.forEach(boton => boton.disabled = true);
+    // Desactivar todos los botones
+    const botones = document.querySelectorAll("button");
+    botones.forEach(boton => boton.disabled = true);
 }
 
-// --- TIMER QUE REDUCE SUS NECESIDADES ---
+// Intervalo que reduce sus necesidades cada 5 segundos
 setInterval(() => {
-  if (!vivo) return;
+    if (!vivo) return;
 
-  hambre = Math.max(hambre - 5, 0);
-  diversion = Math.max(diversion - 3, 0);
-  carino = Math.max(carino - 2, 0);
-  salud = Math.max(salud - 1, 0);
+    hambre = Math.max(hambre - 5, 0);
+    diversion = Math.max(diversion - 3, 0);
+    carino = Math.max(carino - 2, 0);
+    salud = Math.max(salud - 1, 0);
 
-  actualizarEstado();
-}, 5000); // cada 5 segundos pierde puntos
+    actualizarEstado();
+}, 5000);
 
 // Inicializar estado
 actualizarEstado();
