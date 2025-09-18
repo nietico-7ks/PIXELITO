@@ -1,0 +1,54 @@
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>¡Cuida a Pixelito!</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+
+<body>
+
+    <header id="cabeceralogo">¡Cuida a Pixelito!</header>
+
+    <nav>
+        <a href="index.html">Inicio</a>
+        <a href="aboutme.html">Sobre mí</a>
+        <a href="historyp.html">Pixelito</a>
+        <a href="contact.html">Contacto</a>
+    </nav>
+
+    <img src="Imagenes/pixelito feliz.png" id="pixelito" alt="Pixelito">
+
+    <!-- Barra de stats -->
+    <div class="stats">
+        <p>Hambre: <progress id="hambreBar" max="100" value="100"></progress>
+            <span id="hambreText">100%</span>
+        </p>
+        <p>Diversión: <progress id="diversionBar" max="100" value="100"></progress>
+            <span id="diversionText">100%</span>
+        </p>
+        <p>Cariño: <progress id="carinoBar" max="100" value="100"></progress>
+            <span id="carinoText">100%</span>
+        </p>
+        <p>Salud: <progress id="saludBar" max="100" value="100"></progress>
+            <span id="saludText">100%</span>
+        </p>
+    </div>
+
+    <div class="botones">
+        <button onclick="jugar()">🎮 Jugar</button>
+        <button onclick="alimentar()">🍎 Alimentar</button>
+        <button onclick="acariciar()">💖 Acariciar</button>
+    </div>
+
+    <footer>
+        &copy; Anerix Software - Anerix Gaming <br>
+        Derechos reservados 2025
+    </footer>
+
+    <script src="functions.js"></script>
+</body>
+
+</html>
