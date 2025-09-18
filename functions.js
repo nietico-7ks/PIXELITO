@@ -22,7 +22,7 @@ const saludText = document.getElementById("saludText");
 // Botones
 const botones = document.querySelectorAll("button");
 
-// --- FUNCIONES DE INTERACCIÓN ---
+//FUNCIONES DE INTERACCIÓN
 function alimentar() {
   if (!vivo) return;
   hambre = Math.min(hambre + 25, 100);
@@ -43,6 +43,34 @@ function acariciar() {
   carino = Math.min(carino + 20, 100);
   actualizarEstado();
 }
+const form = document.getElementById("pixelitoForm");
+const formRespuesta = document.getElementById("formRespuesta");
+
+form.addEventListener("submit", function(e) {
+    e.preventDefault(); // evitar recargar
+    const nombre = document.getElementById("nombre").value;
+    const mensaje = document.getElementById("mensaje").value;
+
+    formRespuesta.textContent = `¡Gracias ${nombre}! Pixelito recibió tu mensaje: "${mensaje}"`;
+
+    form.reset(); // limpiar formulario
+});
+
+const contactForm = document.getElementById("contactForm");
+const contactRespuesta = document.getElementById("contactRespuesta");
+
+contactForm.addEventListener("submit", function(e) {
+    e.preventDefault(); // evitar recargar la página
+
+    const nombre = document.getElementById("contactNombre").value;
+    const email = document.getElementById("contactEmail").value;
+    const mensaje = document.getElementById("contactMensaje").value;
+
+    contactRespuesta.textContent = `¡Gracias ${nombre}! Hemos recibido tu mensaje y te responderemos a ${email}.`;
+
+    contactForm.reset(); // limpiar el formulario
+});
+
 
 // --- FUNCIÓN PARA ACTUALIZAR EL ESTADO ---
 function actualizarEstado() {
