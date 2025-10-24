@@ -98,11 +98,9 @@ main p, .historia-container p, .contacto-container p {
         width: 90%;
         padding: 15px;
     }
-
     main h1, main h2 {
         font-size: 1.6em;
     }
-
     main p, .historia-container p, .contacto-container p {
         font-size: 1em;
     }
@@ -112,7 +110,6 @@ main p, .historia-container p, .contacto-container p {
     main h1, main h2 {
         font-size: 1.4em;
     }
-
     main p, .historia-container p, .contacto-container p {
         font-size: 0.95em;
     }
@@ -257,3 +254,24 @@ footer {
         padding: 10px 0;
     }
 }
+
+#pixelito.animar {
+  transform: scale(1.1);
+  transition: transform 0.2s ease;
+}
+
+#cabeceralogo {
+  text-align: center;
+  font-size: 2.5em;
+  font-weight: bold;
+  color: #ff9800;
+  margin: 20px 0;
+  letter-spacing: 2px;
+  animation: brillo 2s infinite alternate;
+}
+
+@keyframes brillo {
+  from { text-shadow: 0 0 5px #ffcc80; }
+  to { text-shadow: 0 0 15px #ffd54f; }
+}
+
