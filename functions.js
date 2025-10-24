@@ -97,6 +97,26 @@ function actualizarEstado() {
   }
 }
 
+function reiniciar() {
+  // Restaurar valores
+  hambre = 100;
+  diversion = 100;
+  carino = 100;
+  salud = 100;
+  vivo = true;
+
+  // Volver a habilitar los botones
+  const botones = document.querySelectorAll("button");
+  botones.forEach(boton => boton.disabled = false);
+
+  pixelito.src = "Imagenes/pixelito feliz.png";
+  estado.textContent = "Pixelito ha renacido 🌱 ¡Está feliz otra vez!";
+  document.body.style.background = "linear-gradient(135deg, #fff3e0, #ffe0b2)";
+  
+  actualizarEstado();
+}
+
+
 // Muerte
 function morir() {
   vivo = false;
