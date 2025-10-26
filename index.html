@@ -1,48 +1,83 @@
 <!DOCTYPE html>
 <html lang="es">
-
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Cuida a tu mascota virtual Pixelito. Aliméntalo, juega con él y dale cariño.">
     <title>¡Cuida a Pixelito!</title>
     <link rel="stylesheet" href="style.css">
 </head>
 
-<body>
-
+<body data-estado="feliz">
     <header id="cabeceralogo">¡Cuida a Pixelito!</header>
 
-    <nav>
+    <nav role="navigation">
         <a href="index.html">Inicio</a>
         <a href="aboutme.html">Sobre mí</a>
         <a href="historyp.html">Pixelito</a>
         <a href="contact.html">Contacto</a>
     </nav>
 
-    <img src="Imagenes/pixelito feliz.png" id="pixelito" alt="Pixelito">
-    <p id="estadoPixelito">Pixelito está feliz 😄</p>
+    <!-- NUEVO CONTENEDOR PRINCIPAL -->
+    <div class="game-container">
+        
+        <!-- ESTADÍSTICAS - IZQUIERDA -->
+        <div class="stats" role="region" aria-label="Estadísticas de Pixelito">
+            <h3>📊 Estadísticas</h3>
+            <p>
+                <span class="stat-label">🍽️ Hambre:</span>
+                <div class="stat-bar-container">
+                    <progress id="hambreBar" max="100" value="100" aria-label="Nivel de hambre"></progress>
+                    <span id="hambreText" class="stat-value">100%</span>
+                </div>
+            </p>
+            <p>
+                <span class="stat-label">🎮 Diversión:</span>
+                <div class="stat-bar-container">
+                    <progress id="diversionBar" max="100" value="100" aria-label="Nivel de diversión"></progress>
+                    <span id="diversionText" class="stat-value">100%</span>
+                </div>
+            </p>
+            <p>
+                <span class="stat-label">💖 Cariño:</span>
+                <div class="stat-bar-container">
+                    <progress id="carinoBar" max="100" value="100" aria-label="Nivel de cariño"></progress>
+                    <span id="carinoText" class="stat-value">100%</span>
+                </div>
+            </p>
+            <p>
+                <span class="stat-label">❤️ Salud:</span>
+                <div class="stat-bar-container">
+                    <progress id="saludBar" max="100" value="100" aria-label="Nivel de salud"></progress>
+                    <span id="saludText" class="stat-value">100%</span>
+                </div>
+            </p>
+        </div>
 
+        <!-- PIXELITO - CENTRO -->
+        <div class="pixelito-container">
+            <img src="Imagenes/pixelito feliz.png" id="pixelito" alt="Pixelito, tu mascota virtual">
+            <div id="estadoPixelito" role="status" aria-live="polite">
+                Pixelito está feliz 😄
+            </div>
+        </div>
 
-    <div class="stats">
-        <p>Hambre: <progress id="hambreBar" max="100" value="100"></progress>
-            <span id="hambreText">100%</span>
-        </p>
-        <p>Diversión: <progress id="diversionBar" max="100" value="100"></progress>
-            <span id="diversionText">100%</span>
-        </p>
-        <p>Cariño: <progress id="carinoBar" max="100" value="100"></progress>
-            <span id="carinoText">100%</span>
-        </p>
-        <p>Salud: <progress id="saludBar" max="100" value="100"></progress>
-            <span id="saludText">100%</span>
-        </p>
-    </div>
-
-    <div class="botones">
-        <button onclick="jugar()">🎮 Jugar</button>
-        <button onclick="alimentar()">🍎 Alimentar</button>
-        <button onclick="acariciar()">💖 Acariciar</button>
-        <button onclick="reiniciar()">🔄 Reiniciar Pixelito</button>
+        <!-- BOTONES - DERECHA -->
+        <div class="botones">
+            <h3>🎯 Acciones</h3>
+            <button onclick="Pixelito.jugar()" aria-label="Jugar con Pixelito">
+                🎮 Jugar
+            </button>
+            <button onclick="Pixelito.alimentar()" aria-label="Alimentar a Pixelito">
+                🍎 Alimentar
+            </button>
+            <button onclick="Pixelito.acariciar()" aria-label="Acariciar a Pixelito">
+                💖 Acariciar
+            </button>
+            <button onclick="Pixelito.reiniciar()" aria-label="Reiniciar el juego">
+                🔄 Reiniciar
+            </button>
+        </div>
 
     </div>
 
@@ -53,5 +88,4 @@
 
     <script src="functions.js"></script>
 </body>
-
 </html>
