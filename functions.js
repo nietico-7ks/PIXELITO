@@ -1,8 +1,7 @@
 /**
- * Módulo Pixelito - Gestión de mascota virtual
- * Con sistema de alimentos usando imágenes
+ * Módulo Pixelito - Con sistema de mini-juegos
  * @author Anerix Software
- * @version 3.1
+ * @version 3.3
  */
 const Pixelito = (() => {
     // ==========================================
@@ -33,7 +32,49 @@ const Pixelito = (() => {
         
         // Animación
         DURACION_ANIMACION: 200,
-        DURACION_REDBULL: 5000 // 5 segundos con alas
+        DURACION_REDBULL: 5000,
+        DURACION_JUEGO: 8000, // Duración de los mini-juegos
+        
+        // Guardado
+        CLAVE_GUARDADO: 'pixelito_save',
+        INTERVALO_AUTO_GUARDADO: 10000
+    };
+
+    // ==========================================
+    // SISTEMA DE MINI-JUEGOS
+    // ==========================================
+    const MINI_JUEGOS = {
+        futbol: {
+            nombre: '⚽ Fútbol',
+            icono: 'Imagenes/icono-futbol.png',
+            imagen: 'Imagenes/Pixelito futbol.png',
+            diversion: 35,
+            hambre: -15,
+            salud: -8,
+            mensaje: '¡Pixelito está jugando fútbol! ⚽🏃',
+            descripcion: 'Juega un partido con Pixelito'
+        },
+        xbox: {
+            nombre: '🎮 Xbox',
+            icono: 'Imagenes/icono-xbox.png',
+            imagen: 'Imagenes/Pixelito xbox.png',
+            diversion: 40,
+            hambre: -5,
+            salud: -3,
+            mensaje: '¡Pixelito está jugando Xbox! 🎮✨',
+            descripcion: 'Sesión de videojuegos'
+        },
+        musica: {
+            nombre: '🎵 Música',
+            icono: 'Imagenes/icono-musica.png',
+            imagen: 'Imagenes/Pixelito musica.png',
+            diversion: 30,
+            hambre: -8,
+            salud: 5,
+            carino: 10,
+            mensaje: '¡Pixelito está escuchando música! 🎵🎧',
+            descripcion: 'Relájate con música'
+        }
     };
 
     // ==========================================
@@ -88,7 +129,7 @@ const Pixelito = (() => {
             hambre: 10,
             salud: -25,
             diversion: 20,
-            especial: 'alas' // Efecto especial
+            especial: 'alas'
         }
     };
 
@@ -152,8 +193,24 @@ const Pixelito = (() => {
 
     let vivo = true;
     let intervaloDecaimiento = null;
+    let intervaloAutoGuardado = null;
     let menuAlimentosAbierto = false;
+    let menuJuegosAbierto = false;
+    let jugandoMiniJuego = false;
     let imagenOriginalPixelito = 'Imagenes/pixelito feliz.png';
+    
+    let estadisticasJuego = {
+        tiempoVivo: 0,
+        vecesAlimentado: 0,
+        vecesJugado: 0,
+        vecesAcariciado: 0,
+        vecesReiniciado: 0,
+        partidosFutbol: 0,
+        partidosXbox: 0,
+        sesionesMusica: 0,
+        fechaCreacion: new Date().toISOString(),
+        ultimaVisita: new Date().toISOString()
+    };
 
     // ==========================================
     // REFERENCIAS AL DOM
@@ -175,7 +232,89 @@ const Pixelito = (() => {
             salud: document.getElementById('saludText')
         },
         botones: document.querySelectorAll('.botones button'),
-        menuAlimentos: null
+        menuAlimentos: null,
+        menuJuegos: null
+    };
+
+    // ==========================================
+    // SISTEMA DE GUARDADO
+    // ==========================================
+    
+    const guardarProgreso = () => {
+        const datosGuardado = {
+            estadisticas: estadisticas,
+            vivo: vivo,
+            estadisticasJuego: estadisticasJuego,
+            version: '3.3'
+        };
+        
+        try {
+            localStorage.setItem(CONFIG.CLAVE_GUARDADO, JSON.stringify(datosGuardado));
+            console.log('💾 Progreso guardado');
+        } catch (error) {
+            console.error('Error al guardar:', error);
+        }
+    };
+
+    const cargarProgreso = () => {
+        try {
+            const datosGuardados = localStorage.getItem(CONFIG.CLAVE_GUARDADO);
+            
+            if (!datosGuardados) {
+                console.log('No hay progreso guardado. Iniciando juego nuevo.');
+                return false;
+            }
+
+            const datos = JSON.parse(datosGuardados);
+            
+            estadisticas = datos.estadisticas || estadisticas;
+            vivo = datos.vivo !== undefined ? datos.vivo : true;
+            estadisticasJuego = datos.estadisticasJuego || estadisticasJuego;
+            estadisticasJuego.ultimaVisita = new Date().toISOString();
+            
+            console.log('✅ Progreso cargado');
+            mostrarNotificacion('¡Bienvenido de vuelta! 🎮', 'success');
+            
+            return true;
+        } catch (error) {
+            console.error('Error al cargar progreso:', error);
+            return false;
+        }
+    };
+
+    const borrarProgreso = () => {
+        if (confirm('¿Estás seguro de que quieres borrar todo el progreso?')) {
+            localStorage.removeItem(CONFIG.CLAVE_GUARDADO);
+            mostrarNotificacion('Progreso eliminado. Recarga la página.', 'warning');
+            console.log('🗑️ Progreso borrado');
+        }
+    };
+
+    const iniciarAutoGuardado = () => {
+        intervaloAutoGuardado = setInterval(() => {
+            if (vivo) {
+                estadisticasJuego.tiempoVivo += CONFIG.INTERVALO_AUTO_GUARDADO / 1000;
+            }
+            guardarProgreso();
+        }, CONFIG.INTERVALO_AUTO_GUARDADO);
+    };
+
+    const exportarProgreso = () => {
+        const datos = localStorage.getItem(CONFIG.CLAVE_GUARDADO);
+        if (!datos) {
+            alert('No hay progreso para exportar');
+            return;
+        }
+        
+        const blob = new Blob([datos], { type: 'application/json' });
+        const url = URL.createObjectURL(blob);
+        const a = document.createElement('a');
+        a.href = url;
+        a.download = `pixelito_backup_${new Date().toISOString().split('T')[0]}.json`;
+        a.click();
+        URL.revokeObjectURL(url);
+        
+        mostrarNotificacion('Backup descargado', 'success');
     };
 
     // ==========================================
@@ -214,28 +353,18 @@ const Pixelito = (() => {
     // EFECTOS ESPECIALES
     // ==========================================
     
-    /**
-     * Efecto RedBull - Le salen alas a Pixelito (cambia la imagen)
-     */
     const efectoRedBull = () => {
-        // Guardar la imagen actual
         imagenOriginalPixelito = elementos.pixelito.src;
-        
-        // Cambiar a la imagen con alas
         elementos.pixelito.src = 'Imagenes/Pixelito con alas.png';
         elementos.pixelito.classList.add('con-alas');
         elementos.estado.textContent = '¡RedBull le da alas! 🪽✨';
         
-        // Volver a la imagen normal después de 5 segundos
         setTimeout(() => {
             elementos.pixelito.classList.remove('con-alas');
-            actualizarEstado(); // Esto restaurará la imagen correcta según el estado
+            actualizarEstado();
         }, CONFIG.DURACION_REDBULL);
     };
 
-    /**
-     * Mostrar notificación flotante
-     */
     const mostrarNotificacion = (mensaje, tipo = 'info') => {
         const notif = document.createElement('div');
         notif.className = `notificacion notif-${tipo}`;
@@ -251,12 +380,123 @@ const Pixelito = (() => {
     };
 
     // ==========================================
-    // SISTEMA DE ALIMENTACIÓN
+    // SISTEMA DE MINI-JUEGOS
     // ==========================================
     
     /**
-     * Crea el menú de alimentos con imágenes
+     * Crea el menú de mini-juegos
      */
+    const crearMenuJuegos = () => {
+        if (elementos.menuJuegos) return;
+        
+        const menu = document.createElement('div');
+        menu.id = 'menuJuegos';
+        menu.className = 'menu-alimentos oculto'; // Reutilizamos estilos
+        
+        let htmlMenu = '<div class="menu-contenido">';
+        htmlMenu += '<h3>🎮 ¿A qué quieres jugar con Pixelito?</h3>';
+        htmlMenu += '<div class="grid-alimentos">'; // Reutilizamos grid
+        
+        for (const [key, juego] of Object.entries(MINI_JUEGOS)) {
+            htmlMenu += `
+                <button class="item-alimento" onclick="Pixelito.jugarMiniJuego('${key}')">
+                    <img src="${juego.icono}" alt="${juego.nombre}" class="imagen-alimento">
+                    <span class="nombre-alimento">${juego.nombre}</span>
+                    <p class="descripcion-juego">${juego.descripcion}</p>
+                    <div class="stats-alimento">
+                        <span class="positivo">🎮 +${juego.diversion}</span>
+                        ${juego.hambre !== 0 ? `<span class="negativo">🍽️ ${juego.hambre}</span>` : ''}
+                        ${juego.salud !== 0 ? `<span class="${juego.salud > 0 ? 'positivo' : 'negativo'}">❤️ ${juego.salud > 0 ? '+' : ''}${juego.salud}</span>` : ''}
+                    </div>
+                </button>
+            `;
+        }
+        
+        htmlMenu += '</div>';
+        htmlMenu += '<button class="btn-cerrar" onclick="Pixelito.cerrarMenuJuegos()">❌ Cerrar</button>';
+        htmlMenu += '</div>';
+        
+        menu.innerHTML = htmlMenu;
+        document.body.appendChild(menu);
+        elementos.menuJuegos = menu;
+    };
+
+    /**
+     * Abre el menú de mini-juegos
+     */
+    const abrirMenuJuegos = () => {
+        if (!vivo || jugandoMiniJuego) return;
+        
+        crearMenuJuegos();
+        elementos.menuJuegos.classList.remove('oculto');
+        menuJuegosAbierto = true;
+    };
+
+    /**
+     * Cierra el menú de mini-juegos
+     */
+    const cerrarMenuJuegos = () => {
+        if (elementos.menuJuegos) {
+            elementos.menuJuegos.classList.add('oculto');
+        }
+        menuJuegosAbierto = false;
+    };
+
+    /**
+     * Inicia un mini-juego específico
+     */
+    const jugarMiniJuego = (tipoJuego) => {
+        if (!vivo || jugandoMiniJuego) return;
+        
+        const juego = MINI_JUEGOS[tipoJuego];
+        if (!juego) return;
+        
+        jugandoMiniJuego = true;
+        cerrarMenuJuegos();
+        
+        // Guardar imagen original
+        imagenOriginalPixelito = elementos.pixelito.src;
+        
+        // Cambiar a imagen del juego
+        elementos.pixelito.src = juego.imagen;
+        elementos.pixelito.classList.add('jugando-minijuego');
+        elementos.estado.textContent = juego.mensaje;
+        
+        // Mostrar notificación
+        mostrarNotificacion(`¡A jugar ${juego.nombre}!`, 'info');
+        
+        // Después del tiempo de juego, aplicar efectos
+        setTimeout(() => {
+            // Aplicar cambios en estadísticas
+            estadisticas.diversion = limitarValor(estadisticas.diversion + juego.diversion);
+            estadisticas.hambre = limitarValor(estadisticas.hambre + juego.hambre);
+            estadisticas.salud = limitarValor(estadisticas.salud + juego.salud);
+            
+            if (juego.carino) {
+                estadisticas.carino = limitarValor(estadisticas.carino + juego.carino);
+            }
+            
+            // Actualizar estadísticas de juego
+            estadisticasJuego.vecesJugado++;
+            if (tipoJuego === 'futbol') estadisticasJuego.partidosFutbol++;
+            if (tipoJuego === 'xbox') estadisticasJuego.partidosXbox++;
+            if (tipoJuego === 'musica') estadisticasJuego.sesionesMusica++;
+            
+            // Restaurar estado normal
+            elementos.pixelito.classList.remove('jugando-minijuego');
+            jugandoMiniJuego = false;
+            
+            actualizarEstado();
+            guardarProgreso();
+            
+            mostrarNotificacion('¡Juego terminado! 🎉', 'success');
+        }, CONFIG.DURACION_JUEGO);
+    };
+
+    // ==========================================
+    // SISTEMA DE ALIMENTACIÓN
+    // ==========================================
+    
     const crearMenuAlimentos = () => {
         if (elementos.menuAlimentos) return;
         
@@ -293,7 +533,6 @@ const Pixelito = (() => {
 
     const abrirMenuAlimentos = () => {
         if (!vivo) return;
-        
         crearMenuAlimentos();
         elementos.menuAlimentos.classList.remove('oculto');
         menuAlimentosAbierto = true;
@@ -306,9 +545,6 @@ const Pixelito = (() => {
         menuAlimentosAbierto = false;
     };
 
-    /**
-     * Da un alimento específico a Pixelito
-     */
     const darAlimento = (tipoAlimento) => {
         if (!vivo) return;
         
@@ -317,33 +553,32 @@ const Pixelito = (() => {
         
         animarPixelito();
         
-        // Aplicar efectos
         estadisticas.hambre = limitarValor(estadisticas.hambre + alimento.hambre);
         estadisticas.salud = limitarValor(estadisticas.salud + alimento.salud);
         estadisticas.diversion = limitarValor(estadisticas.diversion + alimento.diversion);
         
-        // Efecto especial de RedBull
+        estadisticasJuego.vecesAlimentado++;
+        
         if (alimento.especial === 'alas') {
             efectoRedBull();
         } else {
             actualizarEstado();
         }
         
-        // Mostrar notificación
         let mensaje = `Pixelito comió ${alimento.nombre}`;
         let tipo = 'info';
         
         if (alimento.salud < -15) {
             tipo = 'warning';
-            mensaje += ' ¡Cuidado con su salud!';
+            mensaje += ' ¡Cuidado!';
         } else if (alimento.salud > 15) {
             tipo = 'success';
-            mensaje += ' ¡Muy saludable!';
+            mensaje += ' ¡Saludable!';
         }
         
         mostrarNotificacion(mensaje, tipo);
-        
         cerrarMenuAlimentos();
+        guardarProgreso();
     };
 
     // ==========================================
@@ -394,13 +629,7 @@ const Pixelito = (() => {
     };
 
     const jugar = () => {
-        if (!vivo) return;
-        
-        animarPixelito();
-        estadisticas.diversion = limitarValor(estadisticas.diversion + CONFIG.INCREMENTO_DIVERSION);
-        estadisticas.hambre = limitarValor(estadisticas.hambre - CONFIG.DECREMENTO_HAMBRE_POR_JUEGO);
-        estadisticas.salud = limitarValor(estadisticas.salud - CONFIG.DECREMENTO_SALUD_POR_JUEGO);
-        actualizarEstado();
+        abrirMenuJuegos();
     };
 
     const acariciar = () => {
@@ -408,10 +637,17 @@ const Pixelito = (() => {
         
         animarPixelito();
         estadisticas.carino = limitarValor(estadisticas.carino + CONFIG.INCREMENTO_CARINO);
+        
+        estadisticasJuego.vecesAcariciado++;
         actualizarEstado();
+        guardarProgreso();
     };
 
     const reiniciar = () => {
+        if (!confirm('¿Estás seguro de que quieres reiniciar a Pixelito?')) {
+            return;
+        }
+        
         estadisticas = {
             hambre: CONFIG.VALOR_MAXIMO,
             diversion: CONFIG.VALOR_MAXIMO,
@@ -420,21 +656,24 @@ const Pixelito = (() => {
         };
         
         vivo = true;
+        estadisticasJuego.vecesReiniciado++;
+        estadisticasJuego.tiempoVivo = 0;
 
         elementos.botones.forEach(boton => {
             boton.disabled = false;
         });
 
         elementos.pixelito.classList.remove('con-alas');
-
         actualizarApariencia(ESTADOS.FELIZ);
-        elementos.estado.textContent = 'Pixelito ha renacido 🌱 ¡Está feliz otra vez!';
+        elementos.estado.textContent = 'Pixelito ha renacido 🌱';
         
         actualizarEstado();
 
         if (!intervaloDecaimiento) {
             iniciarDecaimiento();
         }
+        
+        guardarProgreso();
     };
 
     // ==========================================
@@ -457,6 +696,8 @@ const Pixelito = (() => {
         }
         
         cerrarMenuAlimentos();
+        cerrarMenuJuegos();
+        guardarProgreso();
     };
 
     // ==========================================
@@ -464,7 +705,7 @@ const Pixelito = (() => {
     // ==========================================
     
     const aplicarDecaimiento = () => {
-        if (!vivo) return;
+        if (!vivo || jugandoMiniJuego) return;
 
         estadisticas.hambre = limitarValor(estadisticas.hambre - CONFIG.DECAIMIENTO_HAMBRE);
         estadisticas.diversion = limitarValor(estadisticas.diversion - CONFIG.DECAIMIENTO_DIVERSION);
@@ -483,10 +724,18 @@ const Pixelito = (() => {
     // ==========================================
     
     const inicializar = () => {
+        const progresoCargado = cargarProgreso();
+        
         actualizarEstado();
         iniciarDecaimiento();
+        iniciarAutoGuardado();
         
-        console.log('🎮 Pixelito v3.1 iniciado - Sistema de alimentación con imágenes activado');
+        window.addEventListener('beforeunload', () => {
+            guardarProgreso();
+        });
+        
+        console.log('🎮 Pixelito v3.3 iniciado - Mini-juegos activados');
+        console.log('📊 Estadísticas:', estadisticasJuego);
     };
 
     if (document.readyState === 'loading') {
@@ -504,10 +753,16 @@ const Pixelito = (() => {
         acariciar,
         reiniciar,
         darAlimento,
+        jugarMiniJuego,
         abrirMenuAlimentos,
         cerrarMenuAlimentos,
+        abrirMenuJuegos,
+        cerrarMenuJuegos,
+        guardarProgreso,
+        borrarProgreso,
+        exportarProgreso,
         getEstadisticas: () => ({ ...estadisticas }),
-        getVivo: () => vivo,
-        getConfig: () => ({ ...CONFIG })
+        getEstadisticasJuego: () => ({ ...estadisticasJuego }),
+        getVivo: () => vivo
     };
 })();

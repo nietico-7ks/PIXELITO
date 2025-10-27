@@ -343,7 +343,7 @@ progress::-moz-progress-bar {
 }
 
 /* ============================================
-   MENÚ DE ALIMENTOS - CORREGIDO
+   MENÚ DE ALIMENTOS Y JUEGOS - CORREGIDO
    ============================================ */
 .menu-alimentos {
     position: fixed;
@@ -446,6 +446,14 @@ progress::-moz-progress-bar {
     text-align: center;
 }
 
+.descripcion-juego {
+    font-size: 0.75em;
+    color: #666;
+    margin: 5px 0;
+    text-align: center;
+    line-height: 1.3;
+}
+
 .stats-alimento {
     display: flex;
     flex-wrap: wrap;
@@ -505,6 +513,23 @@ progress::-moz-progress-bar {
 }
 
 /* ============================================
+   EFECTO MINI-JUEGOS
+   ============================================ */
+#pixelito.jugando-minijuego {
+    animation: jugando 1s ease-in-out infinite alternate;
+    box-shadow: 0 8px 25px rgba(255, 152, 0, 0.5);
+}
+
+@keyframes jugando {
+    from {
+        transform: scale(1) rotate(-2deg);
+    }
+    to {
+        transform: scale(1.08) rotate(2deg);
+    }
+}
+
+/* ============================================
    NOTIFICACIONES
    ============================================ */
 .notificacion {
@@ -519,6 +544,7 @@ progress::-moz-progress-bar {
     z-index: 10001;
     transform: translateX(400px);
     transition: transform 0.3s ease;
+    max-width: 300px;
 }
 
 .notificacion.show {
