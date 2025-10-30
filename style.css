@@ -791,3 +791,52 @@ main p, .historia-container p, .contacto-container p {
         font-size: 0.95em;
     }
 }
+.btn-comprar-nav {
+            background: #4CAF50 !important;
+            color: white !important;
+            padding: 8px 16px;
+            border-radius: 8px;
+            transition: all 0.3s ease;
+            display: inline-block;
+        }
+        
+        .btn-comprar-nav:hover {
+            background: #45a049 !important;
+            transform: scale(1.05);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.4);
+        }
+        
+        /* Estilos para el botón de comprar en acciones */
+        .btn-comprar {
+            display: block;
+            width: 100%;
+            padding: 16px 20px;
+            font-size: 1.15em;
+            font-weight: 600;
+            border: none;
+            border-radius: 12px;
+            background: linear-gradient(135deg, #4CAF50 0%, #45a049 100%);
+            color: #fff;
+            text-decoration: none;
+            text-align: center;
+            cursor: pointer;
+            box-shadow: 0 2px 8px rgba(76, 175, 80, 0.3);
+            transition: all 0.2s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-comprar:hover {
+            background: linear-gradient(135deg, #45a049 0%, #388e3c 100%);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 12px rgba(76, 175, 80, 0.5);
+        }
+        
+        .btn-comprar:active {
+            transform: translateY(0);
+        }
+        
+        .btn-comprar:focus {
+            outline: 3px solid #4CAF50;
+            outline-offset: 2px;
+        }
